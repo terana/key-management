@@ -1,6 +1,15 @@
 version: '3'
 services:
 
+  database:
+     tty: true
+     restart: always
+     build: ./database/
+     expose:
+       - "5432"
+     volumes:
+       - "./postgres-data:/var/lib/postgresql/data"
+
   gunicorn:
     restart: always
     build: ./gunicorn/
@@ -9,6 +18,8 @@ services:
     volumes:
       - "static:/static/"
       - "./gunicorn:/usr/src/app"
+    links:
+       - database
     command: bash -c "./run.sh"
 
   nginx:

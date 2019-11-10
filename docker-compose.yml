@@ -1,0 +1,26 @@
+version: '3'
+services:
+
+  gunicorn:
+    restart: always
+    build: ./gunicorn/
+    expose:
+      - "8000"
+    volumes:
+      - "static:/static/"
+      - "./gunicorn:/usr/src/app"
+    command: bash -c "./run.sh"
+
+  nginx:
+    tty: true
+    restart: always
+    build: ./nginx/
+    ports:
+      - "8080:80"
+    volumes:
+      - "static:/www/static"
+    links:
+      - gunicorn
+
+volumes:
+  static:

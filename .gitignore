@@ -1,6 +1,6 @@
 # Project related stuff:
 postgres-data/
-
+secrets.py
 
 # Default .gitignore for Python:
 

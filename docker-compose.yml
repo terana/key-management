@@ -33,5 +33,12 @@ services:
     links:
       - gunicorn
 
+  demo:
+    restart: always
+    build: ./demo-service
+    links:
+      - gunicorn
+    command: python service.py
+
 volumes:
   static:

@@ -1,4 +1,6 @@
 django
 django-allauth
+django-rest-framework
+django-rest-auth
 gunicorn
 psycopg2

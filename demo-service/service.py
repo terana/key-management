@@ -1,5 +1,6 @@
-import requests
 from secrets import creds
+
+import requests
 
 url = "http://gunicorn:8000/"
 

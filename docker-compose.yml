@@ -2,13 +2,13 @@ version: '3'
 services:
 
   database:
-     tty: true
-     restart: always
-     build: ./database/
-     expose:
-       - "5432"
-     volumes:
-       - "./postgres-data:/var/lib/postgresql/data"
+    tty: true
+    restart: always
+    build: ./database/
+    expose:
+      - "5432"
+    volumes:
+      - "./postgres-data:/var/lib/postgresql/data"
 
   gunicorn:
     restart: always
@@ -18,9 +18,10 @@ services:
     volumes:
       - "static:/static/"
       - "./gunicorn:/usr/src/app"
+      - "./scripts:/scripts"
     links:
-       - database
-    command: bash -c "./run.sh"
+      - database
+    command: ["/scripts/wait-for-it.sh", "database:5432", "-s", "--", "bash", "./run.sh"]
 
   nginx:
     tty: true
@@ -38,7 +39,9 @@ services:
     build: ./demo-service
     links:
       - gunicorn
-    command: python service.py
+    volumes:
+      - "./scripts:/scripts"
+    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "service.py"]
 
 volumes:
   static:

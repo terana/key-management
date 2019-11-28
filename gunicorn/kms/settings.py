@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +121,8 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+AUTH_USER_MODEL = 'api.Client'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

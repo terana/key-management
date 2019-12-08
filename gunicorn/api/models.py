@@ -12,8 +12,8 @@ class Client(AbstractUser):
 
 
 class Secret(models.Model):
-    key = models.CharField(max_length=32, unique=True, primary_key=True)
-    value = models.CharField(max_length=32, unique=True)
+    key = models.CharField(max_length=32, primary_key=True)
+    value = models.CharField(max_length=32)
 
 
 class ACLRule(models.Model):

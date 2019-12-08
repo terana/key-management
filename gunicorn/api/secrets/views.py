@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 
 from ..misc.api_response import APIResponse
 from ..misc.http_decorators import require_arguments, get_dict_from_request
@@ -23,13 +25,19 @@ def get_secret(request):
         return APIResponse(response={"key": key, "exception": "True"})
 
 
+@csrf_exempt
 @require_arguments(["key", "value"])
 @require_POST
-@login_required
+#@login_required
 def create_secret(request):
     params = get_dict_from_request(request)
     # TODO check if key already exists.
-    secret = Secret.objects.create(key=params['key'], value=params['value'])
-    secret.save()
+    num_results = Secret.objects.filter(key=params['key']).count()
 
-    return APIResponse()
+    if num_results == 0:
+        secret = Secret.objects.create(key=params['key'], value=params['value'])
+        secret.save()
+    else:
+        return JsonResponse({"msg": "Key already exists in database"})
+
+    return JsonResponse({"msg": "Successfully created"})

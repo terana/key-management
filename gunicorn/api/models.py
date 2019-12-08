@@ -32,6 +32,7 @@ class AccessLog(models.Model):
     time = models.DateTimeField(default=datetime.utcnow)
     requested_secret = models.CharField(max_length=32)
     result = models.BooleanField(default=False)
+    exception = models.BooleanField(default=False)
 
 
 class TokenACL(models.Model):

@@ -1,14 +1,23 @@
 version: '3'
 services:
 
-  database:
-    tty: true
-    restart: always
-    build: ./database/
+  postgresql:
+#    tty: true
+#    restart: always
+#    build: ./database/
+#    expose:
+#      - "5432"
+#    volumes:
+#      - "./postgres-data:/var/lib/postgresql/data"
+    image: postgres:10.7
     expose:
-      - "5432"
-    volumes:
-      - "./postgres-data:/var/lib/postgresql/data"
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: igor
+      POSTGRES_PASSWORD: 123456789
+      POSTGRES_DB: kms
 
   gunicorn:
     restart: always
@@ -19,9 +28,9 @@ services:
       - "static:/static/"
       - "./gunicorn:/usr/src/app"
       - "./scripts:/scripts"
-    links:
-      - database
-    command: ["/scripts/wait-for-it.sh", "database:5432", "-s", "--", "bash", "./run.sh"]
+    depends_on:
+      - postgresql
+    command: ["/scripts/wait-for-it.sh", "postgresql:5432", "-s", "--", "bash", "./run.sh"]
 
   nginx:
     tty: true

@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # '..api.middleware.audit.AuditMiddleWare'
 ]
 
 ROOT_URLCONF = 'kms.urls'
@@ -90,10 +91,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'kms',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': 'database',
-        'PORT': ''
+        'USER': 'igor',
+        'PASSWORD': '123456789',
+        'HOST': 'postgresql',
+        'PORT': '5432'
     }
 }
 

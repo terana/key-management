@@ -28,7 +28,7 @@ def get_secret(request):
 @csrf_exempt
 @require_arguments(["key", "value"])
 @require_POST
-#@login_required
+@login_required
 def create_secret(request):
     params = get_dict_from_request(request)
     # TODO check if key already exists.

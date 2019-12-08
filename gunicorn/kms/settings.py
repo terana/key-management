@@ -25,7 +25,8 @@ SECRET_KEY = 'h)opgn#il(#%8!s4y5gcj47r-0f77#y7z6dr#r$jt1v7$=h4fm'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "gunicorn"
+    "gunicorn",
+    "127.0.0.1",
 ]
 
 # Application definition

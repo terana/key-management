@@ -1,6 +1,9 @@
-django
+django==2.2
 django-allauth
 django-rest-framework
 django-rest-auth
+django-cryptography
+cryptography
 gunicorn
 psycopg2
+django-redis

@@ -21,6 +21,7 @@ services:
       - "./scripts:/scripts"
     links:
       - database
+      - redis
     command: ["/scripts/wait-for-it.sh", "database:5432", "-s", "--", "bash", "./run.sh"]
 
   nginx:
@@ -42,6 +43,11 @@ services:
     volumes:
       - "./scripts:/scripts"
     command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "service.py"]
+
+  redis:
+    tty: true
+    restart: always
+    image: redis:latest
 
 volumes:
   static:

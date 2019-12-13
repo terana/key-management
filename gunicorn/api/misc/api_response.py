@@ -8,7 +8,6 @@ class APIResponseCodes:
     RESPONSE_CODE_KEY_EXIST = 402
 
 
-
 class APIResponse(JsonResponse):
     def __init__(self, code=200, message="", response=None, **kwargs):
         data = {

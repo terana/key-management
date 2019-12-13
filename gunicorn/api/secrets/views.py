@@ -24,7 +24,7 @@ def get_secret(request):
         log = AccessLog(requested_secret=key, exception=True)
         log.save()
         return APIResponse(response={"msg": key,
-                                     "code"% APIResponseCodes.RESPONSE_CODE_AUTH_ERROR})
+                                     "code": APIResponseCodes.RESPONSE_CODE_AUTH_ERROR})
 
 
 @csrf_exempt

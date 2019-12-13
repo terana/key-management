@@ -4,7 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
-from ..misc.api_response import APIResponse
+
+from ..misc.api_response import APIResponse, APIResponseCodes
 from ..misc.http_decorators import require_arguments, get_dict_from_request
 from ..models import Secret, AccessLog
 
@@ -13,16 +14,17 @@ from ..models import Secret, AccessLog
 @require_GET
 def get_secret(request):
     key = request.GET['key']
-
     try:
         secret = Secret.objects.get(key=key)
         log = AccessLog(requested_secret=key, result=secret.value)
         log.save()
-        return APIResponse(response={"key": key, "value": secret.value, "exception": "False"})
+        return APIResponse(response={"msg": secret.value,
+                                     "code": APIResponseCodes.RESPONSE_CODE_OK})
     except ObjectDoesNotExist:
         log = AccessLog(requested_secret=key, exception=True)
         log.save()
-        return APIResponse(response={"key": key, "exception": "True"})
+        return APIResponse(response={"msg": key,
+                                     "code"% APIResponseCodes.RESPONSE_CODE_AUTH_ERROR})
 
 
 @csrf_exempt
@@ -38,6 +40,8 @@ def create_secret(request):
         secret = Secret.objects.create(key=params['key'], value=params['value'])
         secret.save()
     else:
-        return JsonResponse({"msg": "Key already exists in database"})
+        return JsonResponse({"msg": "Key already exists in database",
+                             "code": APIResponseCodes.RESPONSE_CODE_KEY_EXIST})
 
-    return JsonResponse({"msg": "Successfully created"})
+    return JsonResponse({"msg": "Successfully created",
+                         "code": APIResponseCodes.RESPONSE_CODE_OK})

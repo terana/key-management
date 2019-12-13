@@ -5,6 +5,8 @@ class APIResponseCodes:
     RESPONSE_CODE_OK = 200
     RESPONSE_CODE_AUTH_ERROR = 401
     RESPONSE_CODE_BAD_REQUEST = 400
+    RESPONSE_CODE_KEY_EXIST = 402
+
 
 
 class APIResponse(JsonResponse):

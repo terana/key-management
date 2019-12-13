@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
 
-    'api',
+#    'api',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # '..api.middleware.audit.AuditMiddleWare'
+    # '..api.middleware.audit.AuditMiddleWare',
+    'api.middleware.encryption_key_check.EncryptionKeyCheckMiddleware',
 ]
 
 ROOT_URLCONF = 'kms.urls'
@@ -95,6 +97,16 @@ DATABASES = {
         'PASSWORD': '123456789',
         'HOST': 'postgresql',
         'PORT': '5432'
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 

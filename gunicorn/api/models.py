@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     AbstractUser
 )
 from django.db import models
+from django_cryptography.fields import encrypt
 
 
 class Client(AbstractUser):
@@ -13,7 +14,7 @@ class Client(AbstractUser):
 
 class Secret(models.Model):
     key = models.CharField(max_length=32, primary_key=True)
-    value = models.CharField(max_length=32)
+    value = encrypt(models.CharField(max_length=32))
 
 
 class ACLRule(models.Model):

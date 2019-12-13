@@ -31,7 +31,7 @@ class AccessLog(models.Model):
                             default=uuid.uuid4, editable=False)
     time = models.DateTimeField(default=datetime.utcnow)
     requested_secret = models.CharField(max_length=32)
-    result = models.BooleanField(default=False)
+    result = models.CharField(max_length=32)
     exception = models.BooleanField(default=False)
 
 

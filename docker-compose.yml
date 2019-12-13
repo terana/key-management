@@ -43,14 +43,28 @@ services:
     links:
       - gunicorn
 
-  demo:
+  demo_client:
     restart: always
     build: ./demo-service
     links:
       - gunicorn
+      - demo_server
     volumes:
       - "./scripts:/scripts"
     command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "service.py"]
+
+  demo_server:
+    restart: always
+    expose:
+      - "9999"
+    ports:
+      - "9999:9999"
+    build: ./messenger
+    links:
+      - gunicorn
+    volumes:
+      - "./scripts:/scripts"
+    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "app.py"]
 
 volumes:
   static:

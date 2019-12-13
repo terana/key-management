@@ -19,13 +19,14 @@ def get_secret(request):
         secret = Secret.objects.get(key=key)
         log = AccessLog(requested_secret=key, result=secret.value)
         log.save()
-        return APIResponse(response={"msg": secret.value,
-                                     "code": APIResponseCodes.RESPONSE_CODE_OK})
+        return APIResponse(code=APIResponseCodes.RESPONSE_CODE_OK,
+                           response={"key": secret.key,
+                                     "value": secret.value})
     except ObjectDoesNotExist:
         log = AccessLog(requested_secret=key, exception=True)
         log.save()
-        return APIResponse(response={"msg": key,
-                                     "code": APIResponseCodes.RESPONSE_CODE_AUTH_ERROR})
+        return APIResponse(code=APIResponseCodes.RESPONSE_CODE_AUTH_ERROR,
+                           message="Authentication error.")
 
 
 @csrf_exempt
@@ -33,6 +34,7 @@ def get_secret(request):
 @require_POST
 @login_required
 def create_secret(request):
+    print("dwdwqdqwdq")
     params = get_dict_from_request(request)
     # TODO check if key already exists.
     num_results = Secret.objects.filter(key=params['key']).count()

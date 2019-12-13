@@ -2,13 +2,6 @@ version: '3'
 services:
 
   postgresql:
-#    tty: true
-#    restart: always
-#    build: ./database/
-#    expose:
-#      - "5432"
-#    volumes:
-#      - "./postgres-data:/var/lib/postgresql/data"
     image: postgres:10.7
     expose:
       - 5432
@@ -43,6 +36,7 @@ services:
     links:
       - gunicorn
 
+
   demo_client:
     restart: always
     build: ./demo-service
@@ -65,6 +59,11 @@ services:
     volumes:
       - "./scripts:/scripts"
     command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "app.py"]
+
+    redis:
+      tty: true
+      restart: always
+      image: redis:latest
 
 volumes:
   static:

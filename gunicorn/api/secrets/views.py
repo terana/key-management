@@ -3,6 +3,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.core import serializers
 
 
 from ..misc.api_response import APIResponse, APIResponseCodes
@@ -45,3 +46,14 @@ def create_secret(request):
 
     return JsonResponse({"msg": "Successfully created",
                          "code": APIResponseCodes.RESPONSE_CODE_OK})
+
+
+@require_GET
+@login_required
+def get_logs(request):
+    key = request.GET['key']
+    log = AccessLog(requested_secret=key, result="True")
+    log.save()
+    obj = AccessLog.objects.filter()
+    serialized_obj = serializers.serialize('json', [obj, ])
+    return JsonResponse({"msg": serialized_obj, "code": APIResponseCodes.RESPONSE_CODE_OK})

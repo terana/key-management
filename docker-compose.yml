@@ -60,10 +60,10 @@ services:
       - "./scripts:/scripts"
     command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "app.py"]
 
-    redis:
-      tty: true
-      restart: always
-      image: redis:latest
+  redis:
+    tty: true
+    restart: always
+    image: redis:latest
 
 volumes:
   static:

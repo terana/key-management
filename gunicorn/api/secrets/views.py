@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST
-from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-from django.core import serializers
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 
 from ..misc.api_response import APIResponse, APIResponseCodes
 from ..misc.http_decorators import require_arguments, get_dict_from_request
@@ -34,9 +33,7 @@ def get_secret(request):
 @require_POST
 @login_required
 def create_secret(request):
-    print("dwdwqdqwdq")
     params = get_dict_from_request(request)
-    # TODO check if key already exists.
     num_results = Secret.objects.filter(key=params['key']).count()
 
     if num_results == 0:
@@ -53,9 +50,9 @@ def create_secret(request):
 @require_GET
 @login_required
 def get_logs(request):
-    key = request.GET['key']
-    log = AccessLog(requested_secret=key, result="True")
+    # key = request.GET['key']
+    log = AccessLog(requested_secret="access_logs", result="True")
     log.save()
-    obj = AccessLog.objects.filter()
-    serialized_obj = serializers.serialize('json', [obj, ])
-    return JsonResponse({"msg": serialized_obj, "code": APIResponseCodes.RESPONSE_CODE_OK})
+    obj = AccessLog.objects.all()
+    serialized_obj = serializers.serialize('json', obj)
+    return APIResponse(response=serialized_obj, code=APIResponseCodes.RESPONSE_CODE_OK)

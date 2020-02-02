@@ -11,6 +11,8 @@ services:
       POSTGRES_USER: igor
       POSTGRES_PASSWORD: 123456789
       POSTGRES_DB: kms
+    volumes:
+      - "./postgres-data:/var/lib/postgresql/data"
 
   gunicorn:
     restart: always
@@ -36,29 +38,28 @@ services:
     links:
       - gunicorn
 
+  demo_client:
+    restart: always
+    build: ./demo-client
+    links:
+      - gunicorn
+      - demo_server
+    volumes:
+      - "./scripts:/scripts"
+    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "service.py"]
 
-#  demo_client:
-#    restart: always
-#    build: ./demo-service
-#    links:
-#      - gunicorn
-#      - demo_server
-#    volumes:
-#      - "./scripts:/scripts"
-#    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "service.py"]
-
-#  demo_server:
-#    restart: always
-#    expose:
-#      - "9999"
-#    ports:
-#      - "9999:9999"
-#    build: ./messenger
-#    links:
-#      - gunicorn
-#    volumes:
-#      - "./scripts:/scripts"
-#    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "app.py"]
+  demo_server:
+    restart: always
+    expose:
+      - "9999"
+    ports:
+      - "9999:9999"
+    build: ./demo-server
+    links:
+      - gunicorn
+    volumes:
+      - "./scripts:/scripts"
+    command: ["/scripts/wait-for-it.sh", "gunicorn:8000", "-s", "--", "python", "app.py"]
 
   redis:
     tty: true

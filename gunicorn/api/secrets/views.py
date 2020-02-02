@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -35,10 +37,11 @@ def get_secret(request):
 def create_secret(request):
     params = get_dict_from_request(request)
     num_results = Secret.objects.filter(key=params['key']).count()
-
     if num_results == 0:
+        logging.critical("Saving secret")
         secret = Secret.objects.create(key=params['key'], value=params['value'])
         secret.save()
+
     else:
         return JsonResponse({"msg": "Key already exists in database",
                              "code": APIResponseCodes.RESPONSE_CODE_KEY_EXIST})
@@ -50,7 +53,6 @@ def create_secret(request):
 @require_GET
 @login_required
 def get_logs(request):
-    # key = request.GET['key']
     log = AccessLog(requested_secret="access_logs", result="True")
     log.save()
     obj = AccessLog.objects.all()

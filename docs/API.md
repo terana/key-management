@@ -52,4 +52,3 @@ Logout the user.
   "value": "value"
 }
 ```
-
